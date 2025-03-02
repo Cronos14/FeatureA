@@ -1,11 +1,7 @@
 package com.javacktom.featurea
 
 class ClassShared {
-    fun getName() {
-        "Hola Github 3"
-    }
+    fun getName() = "Hola Github bitrise"
 
-    fun getAlias3() {
-        "Hola Github packages 3"
-    }
+    fun getAlias3() = "Github bitrise"
 }
