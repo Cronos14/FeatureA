@@ -7,24 +7,6 @@ plugins {
     id("maven-publish")
 }
 
-// Función para cargar propiedades desde local.properties
-fun getLocalProperty(key: String, project: Project): String {
-    val propertiesFile = project.rootProject.file("local.properties")
-    if (!propertiesFile.exists()) {
-        throw GradleException("local.properties file not found!")
-    }
-
-    val properties = Properties().apply {
-        load(FileInputStream(propertiesFile))
-    }
-
-    return properties.getProperty(key) ?: throw GradleException("Property $key not found in local.properties")
-}
-
-val githubToken: String = getLocalProperty("GITHUB_TOKEN", project)
-val githubUser: String = getLocalProperty("GITHUB_USER", project)
-val githubRepo: String = getLocalProperty("GITHUB_REPO", project)
-
 android {
     namespace = "com.javacktom.featurea"
     compileSdk = 34
@@ -70,11 +52,10 @@ publishing {
     repositories {
         maven {
             name = "GithubPackage"
-            url = uri(System.getenv(githubRepo) ?: githubRepo)
-            isAllowInsecureProtocol = true
+            url = uri(System.getenv("GITHUB_REPO") ?: "")
             credentials {
-                username = System.getenv("GITHUB_USER") ?: githubUser
-                password = System.getenv("GITHUB_TOKEN") ?: githubToken
+                username = System.getenv("GITHUB_USER") ?: ""
+                password = System.getenv("GITHUB_TOKEN") ?: ""
             }
         }
     }
