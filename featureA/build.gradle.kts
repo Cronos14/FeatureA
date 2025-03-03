@@ -41,7 +41,7 @@ publishing {
         create<MavenPublication>("release") {
             groupId = "com.javacktom"
             artifactId = "featurea"  // O cambia a "feature" según la librería
-            version = "1.0.5"
+            version = "1.0.7"
 
             afterEvaluate {
                 from(components["release"])
