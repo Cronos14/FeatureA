@@ -7,27 +7,9 @@ plugins {
     id("maven-publish")
 }
 
-// Función para cargar propiedades desde local.properties
-fun getLocalProperty(key: String, project: Project): String {
-    val propertiesFile = project.rootProject.file("local.properties")
-    if (!propertiesFile.exists()) {
-        throw GradleException("local.properties file not found!")
-    }
-
-    val properties = Properties().apply {
-        load(FileInputStream(propertiesFile))
-    }
-
-    return properties.getProperty(key) ?: throw GradleException("Property $key not found in local.properties")
-}
-
-val githubToken: String = getLocalProperty("GITHUB_TOKEN", project)
-val githubUser: String = getLocalProperty("GITHUB_USER", project)
-val githubRepo: String = getLocalProperty("GITHUB_REPO", project)
-
 android {
     namespace = "com.javacktom.featurea"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -59,7 +41,7 @@ publishing {
         create<MavenPublication>("release") {
             groupId = "com.javacktom"
             artifactId = "featurea"  // O cambia a "feature" según la librería
-            version = "1.0.4"
+            version = "1.0.8"
 
             afterEvaluate {
                 from(components["release"])
@@ -70,11 +52,10 @@ publishing {
     repositories {
         maven {
             name = "GithubPackage"
-            url = uri(System.getenv(githubRepo) ?: githubRepo)
-            isAllowInsecureProtocol = true
+            url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_USER") ?: ""}/${System.getenv("GITHUB_REPO") ?: ""}")
             credentials {
-                username = System.getenv("GITHUB_USER") ?: githubUser
-                password = System.getenv("GITHUB_TOKEN") ?: githubToken
+                username = System.getenv("GITHUB_USER") ?: ""
+                password = System.getenv("GITHUB_TOKEN") ?: ""
             }
         }
     }
